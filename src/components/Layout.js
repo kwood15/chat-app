@@ -10,6 +10,7 @@ export default class Layout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      title: '',
       socket: null,
       user: null
     };
@@ -46,7 +47,8 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { socket, title } = this.props;
+    const { socket } = this.props;
+    const { title } = this.state;
     return (
       <div className="container">
         <Pane
@@ -61,6 +63,6 @@ export default class Layout extends Component {
           <LoginForm socket={socket} setUser={this.setUser} />
         </Pane>
       </div>
-    )
+    );
   }
 }
