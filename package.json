@@ -1,17 +1,28 @@
 {
   "name": "chat-app",
+  "author": "Kay Wood",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "evergreen-ui": "^4.0.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "socket.io": "^2.1.1",
+    "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently 'npm run react' 'npm run server' 'npm run styles'",
+    "react": "concurrently 'react-scripts start' 'npm run styles'",
+    "styles": "sass --watch --style compressed src/styles/app.scss:src/styles/app.css",
+    "server": "nodemon src/server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "nodemon": "^1.18.4"
   },
   "eslintConfig": {
     "extends": "react-app"
