@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-import { Pane, Text, Button } from 'evergreen-ui';
-
+import { Pane } from 'evergreen-ui';
 import { USER_CONNECTED, LOGOUT } from '../Constants';
+import LoginForm from './LoginForm';
 
 const socketUrl = 'http://localhost:3231/';
 
@@ -46,7 +46,7 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { title } = this.props;
+    const { socket, title } = this.props;
     return (
       <div className="container">
         <Pane
@@ -57,8 +57,8 @@ export default class Layout extends Component {
           justifyContent="center"
           border="default"
         >
-          <Text>{title}</Text>
-          <Button>xxx</Button>
+          <h1>{title}</h1>
+          <LoginForm socket={socket} setUser={this.setUser} />
         </Pane>
       </div>
     )

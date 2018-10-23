@@ -16,7 +16,7 @@ const createMessage = ({ message, sender }) => {
 	}
 };
 
-const createChat = ({ messages = [], name ='Community', users = []} = {}) => {
+const createChat = ({ messages = [], name = 'Community', users = []} = {}) => {
 	return {
 		id: uuidv4(),
 		name,

@@ -17,12 +17,19 @@
     "styles": "sass --watch --style compressed src/styles/app.scss:src/styles/app.css",
     "server": "nodemon src/server/index.js",
     "build": "react-scripts build",
+    "lint": "eslint . --ext .js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
-    "nodemon": "^1.18.4"
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "nodemon": "^1.18.4",
+    "sass": "^1.14.3"
   },
   "eslintConfig": {
     "extends": "react-app"
