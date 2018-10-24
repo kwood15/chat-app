@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
 import SideBar from './Sidebar';
-
-import { User } from '../../Classes';
+// import { User } from '../../Classes';
 import Messages from '../messaging/Messages';
 import MessageInput from '../messaging/MessageInput';
 import ChatHeading from './ChatHeading';
@@ -115,7 +112,7 @@ export default class ChatContainer extends Component {
           chats: newChats
         });
       }
-    }
+    };
   }
 
   sendMessage(chatId, message) {
@@ -129,8 +126,8 @@ export default class ChatContainer extends Component {
   }
 
   render() {
-    const { user, logout } = this.props
-    const { activeChat, chats } = this.state
+    const { user, logout } = this.props;
+    const { activeChat, chats } = this.state;
     return (
       <div className="container">
         <SideBar
@@ -138,7 +135,7 @@ export default class ChatContainer extends Component {
           chats={chats}
           user={user}
           activeChat={activeChat}
-          setActiveChat={ chat => this.setActiveChat(chat) }
+          setActiveChat={chat => this.setActiveChat(chat)}
         />
         <div className="chat-room-container">
           {
@@ -156,12 +153,12 @@ export default class ChatContainer extends Component {
                 <MessageInput
                   sendMessage={
                     (message) => {
-                      this.sendMessage(activeChat.id, message)
+                      this.sendMessage(activeChat.id, message);
                     }
                   }
                   sendTyping={
                     (isTyping) => {
-                      this.sendTyping(activeChat.id, isTyping)
+                      this.sendTyping(activeChat.id, isTyping);
                     }
                   }
                 />
@@ -174,13 +171,6 @@ export default class ChatContainer extends Component {
           }
         </div>
       </div>
-	  );
+    );
   }
 }
-
-// ChatContainer.propTypes = {
-//   socket: PropTypes.shape(),
-//   user: PropTypes.shape({
-//     User
-//   }).isRequired
-// };

@@ -34,9 +34,9 @@ export default class MessageInput extends Component {
     this.typingInterval = setInterval(() => {
       if ((Date.now() - this.lastUpdateTime) > 300) {
         this.setState({
-          isTyping:false
+          isTyping: false
         });
-        this.stopCheckingTyping()
+        this.stopCheckingTyping();
       }
     }, 300);
   }
@@ -63,25 +63,26 @@ export default class MessageInput extends Component {
   }
 
   render() {
-    const { message } = this.state
+    const { message } = this.state;
     return (
       <div className="message-input">
         <form onSubmit={this.handleSubmit} className="message-form">
           <input
             id="message"
-            ref={"messageinput"}
+            ref="messageinput"
             type="text"
             className="form-control"
-            value = { message }
-            autoComplete={'off'}
+            value={message}
+            autoComplete="off"
             placeholder="Type something to send"
-            onKeyUp={(e)=>{ e.keyCode !== 13 && this.sendTyping() }}
+            onKeyUp={(e) => { e.keyCode !== 13 && this.sendTyping(); }}
             onChange={({ target: { value: v } }) => this.setState({ message: v })}
           />
           <button
-            disabled={ message.length < 1}
+            disabled={message.length < 1}
             type="submit"
-            className="send">
+            className="send"
+          >
             Send
           </button>
         </form>

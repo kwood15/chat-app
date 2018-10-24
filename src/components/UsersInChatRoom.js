@@ -5,8 +5,8 @@ export default class UsersIndChatRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      onlineUsers:[],
-      typingUsers:[]
+      onlineUsers: [],
+      typingUsers: []
     };
     this.initSocket();
   }
@@ -42,8 +42,8 @@ export default class UsersIndChatRoom extends Component {
             ))
           }
           {
-            typingUsers.map((user, i)=> (
-              <div key={i} className="collection-item">
+            typingUsers.map(user => (
+              <div key={user} className="collection-item">
                 {user}
                 {' is typing. . .'}
               </div>

@@ -1,12 +1,10 @@
 import React from 'react';
-import FAVideo from 'react-icons/lib/fa/video-camera';
-import FAUserPlus from 'react-icons/lib/fa/user-plus';
-import MdEllipsisMenu from 'react-icons/lib/md/keyboard-control';
-
-import React from 'react';
+// import FaVideoCamera from 'react-icons/lib/fa/video-camera';
+// import FaUserPlus from 'react-icons/lib/fa/user-plus';
+// import MdEllipsisMenu from 'react-icons/lib/md/keyboard-control';
 
 const ChatHeading = ({ name, online, numberOfUsers }) => {
-  const onlineText = online ? 'online':'offline';
+  const onlineText = online ? 'online' : 'offline';
   return (
     <div className="chat-header">
       <div className="user-info">
@@ -14,15 +12,17 @@ const ChatHeading = ({ name, online, numberOfUsers }) => {
         <div className="status">
           <div className={`indicator ${onlineText}`} />
           <span>
-            {numberOfUsers ? numberOfUsers : null}
+            {numberOfUsers || null}
             online
           </span>
         </div>
       </div>
       <div className="options">
-        <FAVideo />
-        <FAUserPlus />
+        {/*
+        <FaVideoCamera />
+        <FaUserPlus />
         <MdEllipsisMenu />
+        */}
       </div>
     </div>
   );

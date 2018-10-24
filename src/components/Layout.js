@@ -31,7 +31,7 @@ export default class Layout extends Component {
     }
   }
 
-  setUser = (user)=> {
+  setUser = (user) => {
     const { socket } = this.state;
     this.setState({
       user
@@ -55,9 +55,11 @@ export default class Layout extends Component {
   }
 
   render() {
+    const { title } = this.props;
     const { user, socket } = this.state;
     return (
       <div className="container">
+        <h1>{title}</h1>
         {
           !user ? <LoginForm socket={socket} setUser={this.setUser} verified={this.setUser} />
             : <ChatContainer socket={socket} logout={this.logout} user={user} />

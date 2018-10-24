@@ -18,7 +18,7 @@ const createChat = ({ messages = [], name = 'Community', users = [] } = {}) => (
   messages,
   users,
   typingUsers: [],
-  addMessage: (messages, message) => [...messages, message],
+  addMessage: message => [...messages, message],
   addTypingUser: (typingUsers, username) => [...typingUsers, username],
   removeTypingUser: (typingUsers, username) => typingUsers.filter(u => u === username)
 });
