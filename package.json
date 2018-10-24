@@ -14,8 +14,8 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "concurrently 'npm run react' 'npm run server' 'npm run styles'",
-    "react": "concurrently 'react-scripts start' 'npm run styles'",
+    "start": "concurrently 'npm run react' 'npm run styles' 'npm run lint' 'npm run server'",
+    "react": "concurrently 'react-scripts start' 'npm run styles' 'npm run lint'",
     "styles": "sass --watch --style compressed src/styles/app.scss:src/styles/app.css",
     "server": "nodemon src/server/index.js",
     "build": "react-scripts build",
@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "concurrently": "^4.0.1",
-    "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",

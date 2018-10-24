@@ -11,9 +11,9 @@ export default class LoginForm extends Component {
     };
   }
 
-  componentDidMount() {
-    this.focus();
-  }
+  // componentDidMount() {
+  //   this.focus();
+  // }
 
   setUser(response) {
     const { setUser } = this.props;
@@ -43,9 +43,9 @@ export default class LoginForm extends Component {
     socket.emit(USER_VERIFY, nickname, this.setUser);
   };
 
-  focus = () => {
-    this.textInput.focus();
-  };
+  // focus = () => {
+  //   this.textInput.focus();
+  // };
 
   render() {
     const { error } = this.state;

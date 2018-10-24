@@ -1,9 +1,9 @@
 module.exports = {
   parser: 'babel-eslint',
   env: {
-		browser: true,
-		node: true,
-	},
+    browser: true,
+    node: true,
+  },
   extends: 'airbnb',
   rules: {
     'comma-dangle': ['error', 'never'],

@@ -1,41 +1,42 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
-import { Pane } from 'evergreen-ui';
-import { USER_CONNECTED, LOGOUT } from '../Constants';
 import LoginForm from './LoginForm';
+import ChatContainer from './chat/ChatContainer';
+import { USER_CONNECTED, LOGOUT } from '../Constants';
 
-const socketUrl = 'http://localhost:3231/';
+const serverURI = process.env.REACT_APP_SERVER || 'http://localhost:3231';
+
+const io = require('socket.io-client');
 
 export default class Layout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
       socket: null,
       user: null
     };
   }
 
-  componentDidMount() {
-    this.initSocket();
-  }
-
-  initSocket = () => {
-    const socket = io(socketUrl);
-    socket.on('connect', () => {
-      console.log('Connected');
-    });
+  componentWillMount() {
+    const socket = io(serverURI);
     this.setState({
       socket
     });
+    this.initSocket(socket);
   }
 
-  setUser = (user) => {
+  reconnectUserInfo = () => {
+    const { socket, user } = this.state;
+    if (user != null) {
+      socket.emit(USER_CONNECTED, user);
+    }
+  }
+
+  setUser = (user)=> {
     const { socket } = this.state;
-    socket.emit(USER_CONNECTED, user);
     this.setState({
       user
     });
+    socket.emit(USER_CONNECTED, user);
   }
 
   logout = () => {
@@ -46,22 +47,21 @@ export default class Layout extends Component {
     });
   }
 
+  initSocket(socket) {
+    socket.on('connect', (value) => {
+      console.log('Connected');
+    });
+    socket.on('disconnect', this.reconnectUserInfo);
+  }
+
   render() {
-    const { socket } = this.props;
-    const { title } = this.state;
+    const { user, socket } = this.state;
     return (
       <div className="container">
-        <Pane
-          height={120}
-          width={240}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          border="default"
-        >
-          <h1>{title}</h1>
-          <LoginForm socket={socket} setUser={this.setUser} />
-        </Pane>
+        {
+          !user ? <LoginForm socket={socket} setUser={this.setUser} verified={this.setUser} />
+            : <ChatContainer socket={socket} logout={this.logout} user={user} />
+        }
       </div>
     );
   }
