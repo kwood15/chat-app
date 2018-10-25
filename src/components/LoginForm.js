@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { TextInput, Button } from 'evergreen-ui';
 import { USER_VERIFY } from '../Constants';
 
 export default class LoginForm extends Component {
@@ -9,65 +8,54 @@ export default class LoginForm extends Component {
       nickname: '',
       error: ''
     };
-    this.setUser = this.setUser.bind(this);
   }
 
-  componentDidMount() {
-    // this.focus();
-  }
-
-  setUser(response) {
+  setUser = ({ user, isUser }) => {
     const { setUser } = this.props;
-    if (!response.isUser) {
-      setUser(response.user);
+    if (isUser) {
+      this.setError('User name taken');
     } else {
-      this.setError('Username is already taken');
+      this.setError('');
+      setUser(user);
     }
   }
 
-  setError(error) {
-    this.setState({
-      error
-    });
-  }
-
-  handleChange = (event) => {
-    this.setState({
-      nickname: event.target.value
-    });
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { socket } = this.props;
     const { nickname } = this.state;
     socket.emit(USER_VERIFY, nickname, this.setUser);
   }
 
-  // focus = () => {
-  //   this.textInput.focus();
-  // }
+  handleChange = (e) => {
+    this.setState({
+      nickname: e.target.value
+    });
+  }
+
+  setError = (error) => {
+    this.setState({
+      error
+    });
+  }
 
   render() {
     const { nickname, error } = this.state;
     return (
       <div className="login">
-        <form onSubmit={this.handleSubmit} className="login__form">
+        <form onSubmit={this.handleSubmit} className="login-form">
           <label htmlFor="nickname">
             <h2>Got a nickname?</h2>
           </label>
-          <TextInput
+          <input
             ref={(input) => { this.textInput = input; }}
-            id="nickname"
             type="text"
+            id="nickname"
             value={nickname}
             onChange={this.handleChange}
-            placeholder="Enter your nickname..."
+            placeholder="MYCoolUSername"
           />
-          <div className="error">
-            {error}
-          </div>
-          <Button>Login</Button>
+          <div className="error">{error || null}</div>
         </form>
       </div>
     );

@@ -1,173 +1,159 @@
 import React, { Component } from 'react';
-import SideBar from './Sidebar';
-// import { User } from '../../Classes';
-import Messages from '../messaging/Messages';
-import MessageInput from '../messaging/MessageInput';
+import { values } from 'lodash';
+import Sidebar from '../sidebar/Sidebar';
 import ChatHeading from './ChatHeading';
-
+import Messages from '../messages/Messages';
+import MessageInput from '../messages/MessageInput';
 import {
   COMMUNITY_CHAT,
-  MESSAGE_RECEIVED,
   MESSAGE_SENT,
-  TYPING
+  MESSAGE_RECEIVED,
+  TYPING,
+  PRIVATE_MESSAGE,
+  USER_CONNECTED,
+  USER_DISCONNECTED
 } from '../../Constants';
 
 export default class ChatContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeChat: null,
-      communityChat: null,
-      chats: []
+      chats: [],
+      users: [],
+      activeChat: null
     };
-    this.socketEvents = [];
   }
 
   componentDidMount() {
     const { socket } = this.props;
-    socket.emit(COMMUNITY_CHAT, this.resetChat);
-    this.initSocket();
+    this.initSocket(socket);
   }
 
   componentWillUnmount() {
-    this.deinitialize();
-  }
-
-  setActiveChat(chat) {
-    this.setState({
-      activeChat: chat
-    });
-  }
-
-  resetChat = chat => this.addChat(chat, true);
-
-  removeSocketEvents = (socket, events) => {
-    if (events.length > 0) {
-      socket.off(events[0]);
-      this.removeSocketEvents(socket, events.slice(1));
-    }
-  }
-
-  deinitialize() {
     const { socket } = this.props;
-    this.removeSocketEvents(socket, this.socketEvents);
+    socket.off(PRIVATE_MESSAGE);
+    socket.off(USER_CONNECTED);
+    socket.off(USER_DISCONNECTED);
   }
 
-  initSocket() {
-    const { socket } = this.props;
-    socket.on('connect', () => {
-      socket.emit(COMMUNITY_CHAT, this.resetChat);
-    });
-  }
-
-  addChat(chat, reset) {
-    const { socket } = this.props;
-    const { chats } = this.state;
-    const newChats = reset ? [chat] : [...chats, chat];
-
-    this.setState({
-      chats: newChats,
-      activeChat: chat
-    });
-
-    const messageEvent = `${MESSAGE_RECEIVED}-${chat.id}`;
-    const typingEvent = `${TYPING}-${chat.id}`;
-
-    socket.on(messageEvent, this.addMessageToChat(chat.id));
-    socket.on(typingEvent, this.updateTypingInChat(chat.id));
-
-    this.socketEvents.push(messageEvent, typingEvent);
-  }
-
-  addMessageToChat(chatId) {
-    return (message) => {
-      const { chats } = this.state;
-      const newChats = chats.map((chat) => {
-        if (chat.id === chatId) {
-          chat.messages.push(message);
-        }
-        return chat;
-      });
-      this.setState({
-        chats: newChats
-      });
-    };
-  }
-
-  updateTypingInChat(chatId) {
-    return ({ isTyping, user }) => {
-      if (user !== user.name) {
-        const { chats } = this.state;
-        const newChats = chats.map((chat) => {
-          if (chat.id === chatId) {
-            if (isTyping && !chat.typingUsers.includes(user)) {
-              chat.typingUsers.push(user);
-            } else if (!isTyping && chat.typingUsers.includes(user)) {
-              chat.typingUsers = chat.typingUsers.filter(u => u !== user);
-            }
-          }
-          return chat;
-        });
-        this.setState({
-          chats: newChats
-        });
-      }
-    };
-  }
-
-  sendMessage(chatId, message) {
-    const { socket } = this.props;
-    socket.emit(MESSAGE_SENT, { chatId, message });
-  }
-
-  sendTyping(chatId, isTyping) {
+  sendTyping = (chatId, isTyping) => {
     const { socket } = this.props;
     socket.emit(TYPING, { chatId, isTyping });
   }
 
+  setActiveChat = (activeChat) => {
+    this.setState({ activeChat });
+  }
+
+  updateTypingInChat = chatId => ({ isTyping, user }) => {
+    if (user !== user.name) {
+      const { chats } = this.state;
+
+      const newChats = chats.map((chat) => {
+        if (chat.id === chatId) {
+          if (isTyping && !chat.typingUsers.includes(user)) {
+            chat.typingUsers.push(user);
+          } else if (!isTyping && chat.typingUsers.includes(user)) {
+            chat.typingUsers = chat.typingUsers.filter(u => u !== user);
+          }
+        }
+        return chat;
+      });
+      this.setState({ chats: newChats });
+    }
+  }
+
+  addMessageToChat = chatId => (message) => {
+    const { chats } = this.state;
+    const newChats = chats.map((chat) => {
+      if (chat.id === chatId) chat.messages.push(message);
+      return chat;
+    });
+    this.setState({ chats: newChats });
+  }
+
+  addChat = (chat, reset = false) => {
+    const { socket } = this.props;
+    const { chats, activeChat } = this.state;
+
+    const newChats = reset ? [chat] : [...chats, chat];
+    this.setState({ chats: newChats, activeChat: reset ? chat : activeChat });
+
+    const messageEvent = `${MESSAGE_RECEIVED}-${chat.id}`;
+    const typingEvent = `${TYPING}-${chat.id}`;
+
+    socket.on(typingEvent, this.updateTypingInChat(chat.id));
+    socket.on(messageEvent, this.addMessageToChat(chat.id));
+  }
+
+  sendMessage = (chatId, message) => {
+    const { socket } = this.props;
+    socket.emit(MESSAGE_SENT, { chatId, message });
+  }
+
+  resetChat = chat => this.addChat(chat, true);
+
+  sendOpenPrivateMessage = (receiver) => {
+    const { socket, user } = this.props;
+    const { activeChat } = this.state;
+    socket.emit(PRIVATE_MESSAGE, { receiver, sender: user.name, activeChat });
+  }
+
+  initSocket(socket) {
+    socket.emit(COMMUNITY_CHAT, this.resetChat);
+    socket.on(PRIVATE_MESSAGE, this.addChat);
+    socket.on('connect', () => {
+      socket.emit(COMMUNITY_CHAT, this.resetChat);
+    });
+    socket.on(USER_CONNECTED, (users) => {
+      this.setState({ users: values(users) });
+    });
+    socket.on(USER_DISCONNECTED, (users) => {
+      this.setState({ users: values(users) });
+    });
+  }
+
   render() {
     const { user, logout } = this.props;
-    const { activeChat, chats } = this.state;
+    const { chats, activeChat, users } = this.state;
     return (
       <div className="container">
-        <SideBar
+        <Sidebar
           logout={logout}
           chats={chats}
           user={user}
+          users={users}
           activeChat={activeChat}
-          setActiveChat={chat => this.setActiveChat(chat)}
+          setActiveChat={this.setActiveChat}
+          onSendPrivateMessage={this.sendOpenPrivateMessage}
         />
         <div className="chat-room-container">
-          {
-            activeChat !== null ? (
-              <div className="chat-room">
-                <ChatHeading
-                  name={activeChat.name}
-                  online
-                />
-                <Messages
-                  messages={activeChat.messages}
-                  user={user}
-                  typingUsers={activeChat.typingUsers}
-                />
-                <MessageInput
-                  sendMessage={
-                    (message) => {
-                      this.sendMessage(activeChat.id, message);
-                    }
-                  }
-                  sendTyping={
-                    (isTyping) => {
-                      this.sendTyping(activeChat.id, isTyping);
-                    }
-                  }
-                />
-              </div>
-            ) : (
-              <div className="chat-room choose">
-                <h3>Choose a chat</h3>
-              </div>
-            )
+          {activeChat !== null ? (
+            <div className="chat-room">
+              <ChatHeading name={activeChat.name} />
+              <Messages
+                messages={activeChat.messages}
+                user={user}
+                typingUsers={activeChat.typingUsers}
+              />
+              <MessageInput
+                sendMessage={
+              (message) => {
+                this.sendMessage(activeChat.id, message);
+              }
+            }
+                sendTyping={
+              (isTyping) => {
+                this.sendTyping(activeChat.id, isTyping);
+              }
+            }
+              />
+            </div>
+          ) : (
+            <div className="chat-room choose">
+              <h3>Choose a chat!</h3>
+            </div>
+          )
           }
         </div>
       </div>
