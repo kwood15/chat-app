@@ -3,29 +3,26 @@ import React from 'react';
 // import FaUserPlus from 'react-icons/lib/fa/user-plus';
 // import MdEllipsisMenu from 'react-icons/lib/md/keyboard-control';
 
-const ChatHeading = ({ name, online, numberOfUsers }) => {
-  const onlineText = online ? 'online' : 'offline';
-  return (
-    <div className="chat-header">
-      <div className="user-info">
-        <div className="user-name">{name}</div>
-        <div className="status">
-          <div className={`indicator ${onlineText}`} />
-          <span>
-            {numberOfUsers || null}
+const ChatHeading = ({ name, online, numberOfUsers }) => (
+  <div className="chat-header">
+    <div className="user-info">
+      <div className="user-name">{name}</div>
+      <div className="status">
+        <div className="indicator" />
+        <span>
+          {numberOfUsers || null}
             online
-          </span>
-        </div>
+        </span>
       </div>
-      <div className="options">
-        {/*
+    </div>
+    <div className="options">
+      {/*
         <FaVideoCamera />
         <FaUserPlus />
         <MdEllipsisMenu />
         */}
-      </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default ChatHeading;

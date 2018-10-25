@@ -39,7 +39,6 @@ module.exports = function (socket) {
     sendTypingFromUser = sendTypingToChat(user.name);
 
     io.emit(USER_CONNECTED, connectedUsers);
-    console.log(connectedUsers);
   });
 
   socket.on('disconnect', () => {

@@ -54,11 +54,9 @@ export default class Layout extends Component {
   }
 
   render() {
-    const { title } = this.props;
     const { socket, user } = this.state;
     return (
       <div className="container">
-        <h1>{title}</h1>
         {
           !user ? <LoginForm socket={socket} setUser={this.setUser} />
             : <ChatContainer socket={socket} logout={this.logout} user={user} />
