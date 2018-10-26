@@ -1,9 +1,8 @@
 import React from 'react';
-// import FaVideoCamera from 'react-icons/lib/fa/video-camera';
-// import FaUserPlus from 'react-icons/lib/fa/user-plus';
-// import MdEllipsisMenu from 'react-icons/lib/md/keyboard-control';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVideo, faUserPlus, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 
-const ChatHeading = ({ name, online, numberOfUsers }) => (
+const ChatHeading = ({ name, numberOfUsers }) => (
   <div className="chat-header">
     <div className="user-info">
       <div className="user-name">{name}</div>
@@ -16,11 +15,9 @@ const ChatHeading = ({ name, online, numberOfUsers }) => (
       </div>
     </div>
     <div className="options">
-      {/*
-        <FaVideoCamera />
-        <FaUserPlus />
-        <MdEllipsisMenu />
-        */}
+      <FontAwesomeIcon icon={faVideo} />
+      <FontAwesomeIcon icon={faUserPlus} />
+      <FontAwesomeIcon icon={faEllipsisH} />
     </div>
   </div>
 );

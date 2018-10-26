@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { last, get, differenceBy } from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faListUl, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { createChatNameFromUsers } from '../../Factories';
 import SidebarOption from './SidebarOption';
-// import { FaChevronDown } from 'react-icons/lib/md/keyboard-arrow-down';
-// import FaMenu from 'react-icons/lib/fa/list-ul';
-// import FaSearch from 'react-icons/lib/fa/search';
-// import MdEject from 'react-icons/lib/md/eject';
 
 export default class Sidebar extends Component {
   static type = {
@@ -59,16 +57,12 @@ export default class Sidebar extends Component {
         <div className="heading">
           <div className="app-name">
             KAY : CO
-            {/* <FaChevronDown /> */}
+            <FontAwesomeIcon icon={faChevronDown} />
           </div>
-          <div className="menu">
-            {/* <FaMenu /> */}
-          </div>
+          <FontAwesomeIcon icon={faListUl} />
         </div>
         <form onSubmit={this.handleSubmit} className="search">
-          <i className="search-icon">
-            {/* <FaSearch /> */}
-          </i>
+          <FontAwesomeIcon className="search-icon" icon={faSearch} />
           <input
             placeholder="Search"
             type="text"
@@ -118,7 +112,7 @@ export default class Sidebar extends Component {
         <div className="current-user">
           <span>{user.name}</span>
           <div role="button" onClick={() => { logout(); }} title="Logout" className="logout">
-            {/* <MdEject/> */}
+            <i className="material-icons">eject</i>
           </div>
         </div>
       </div>

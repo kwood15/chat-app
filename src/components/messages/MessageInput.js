@@ -59,7 +59,6 @@ export default class MessageInput extends Component {
     }
   }
 
-
   render() {
     const { message } = this.state;
     return (
